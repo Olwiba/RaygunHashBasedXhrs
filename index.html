@@ -17,7 +17,7 @@
     </script>
     <script type="text/javascript">
         // Raygun API key here
-        rg4js('apiKey', 'SCKj6cbQh7jYqxgBPO9Ylg');
+        rg4js('apiKey', 'lPkOow7R7VyY2ot0OEuIWQ');
         rg4js('enablePulse', true);
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,20 +25,20 @@
     <script src="https://cdn.jsdelivr.net/npm/sammy@0.7.6/lib/sammy.min.js"></script>
     <!--  SammyJS setup for Hash based routing  -->
     <script type="text/javascript" charset="utf-8">
-        // ┌------------------------------------------------┐
-        // │ Navigation callback                            │
-        // ├------------------------------------------------┤
-        // │ I have created this outside my encapsulated    │
-        // │ function to allow rg4js to be called correctly.│
-        // │                                                │
-        // │ For hash based routing we can't use pathname   │
-        // │ I opted for href.split('://')[1] for the path  │
-        // │ this could be tailored to your needs.          │
-        // └------------------------------------------------┘
+        // ┌--------------------------------------------------┐
+        // │ Navigation callback                              │
+        // ├--------------------------------------------------┤
+        // │ I have created this outside my encapsulated      │
+        // │ function to allow rg4js to be called correctly.  │
+        // │                                                  │
+        // │ For hash based routing we'll add the path & hash │
+        // │ I opted for href.split('://')[1] for the path    │
+        // │ this could be tailored to your needs.            │
+        // └--------------------------------------------------┘
         function rgNavigationCallback() {
             rg4js('trackEvent', {
                 type: 'pageView',
-                path: `${window.location.href.split('://')[1]}`
+                path: `${window.location.pathname}${window.location.hash}`
             });
         }
 
