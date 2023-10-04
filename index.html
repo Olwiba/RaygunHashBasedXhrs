@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Raygun hash XHR demo</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <!--  Raygun setup & configuration  -->
+    <script type="text/javascript">
+        !function(a,b,c,d,e,f,g,h){a.RaygunObject=e,a[e]=a[e]||function(){
+            (a[e].o=a[e].o||[]).push(arguments)},f=b.createElement(c),g=b.getElementsByTagName(c)[0],
+            f.async=1,f.src=d,g.parentNode.insertBefore(f,g),h=a.onerror,a.onerror=function(b,c,d,f,g){
+            h&&h(b,c,d,f,g),g||(g=new Error(b)),a[e].q=a[e].q||[],a[e].q.push({
+                e:g})}}(window,document,"script","//cdn.raygun.io/raygun4js/raygun.min.js","rg4js");
+    </script>
+    <script type="text/javascript">
+        // Raygun API key here
+        rg4js('apiKey', 'SCKj6cbQh7jYqxgBPO9Ylg');
+        rg4js('enablePulse', true);
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sammy@0.7.6/lib/sammy.min.js"></script>
+    <!--  SammyJS setup for Hash based routing  -->
+    <script type="text/javascript" charset="utf-8">
+        // ┌------------------------------------------------┐
+        // │ Navigation callback                            │
+        // ├------------------------------------------------┤
+        // │ I have created this outside my encapsulated    │
+        // │ function to allow rg4js to be called correctly.│
+        // │                                                │
+        // │ For hash based routing we can't use pathname   │
+        // │ I opted for href.split('://')[1] for the path  │
+        // │ this could be tailored to your needs.          │
+        // └------------------------------------------------┘
+        function rgNavigationCallback() {
+            rg4js('trackEvent', {
+                type: 'pageView',
+                path: `${window.location.href.split('://')[1]}`
+            });
+        }
+
+        (function($, rgNavigationCallback) {
+            var app = $.sammy(function() {
+
+                // Add navigation middleware to call Raygun
+                this.before(rgNavigationCallback);
+
+                // Home route
+                this.get('#/', function() {
+                    $('#heading').text('Welcome home 👋');
+                    $('#passage').text('This is the homepage, try navigating to another page or triggering some XHR behaviour.');
+                });
+
+                // Settings route
+                this.get('#/settings', function() {
+                    $('#heading').text('Settings 🛠️');
+                    $('#passage').text('This is the settings page, try navigating to another page or triggering some XHR behaviour.');
+                });
+
+                // About route
+                this.get('#/about', function() {
+                    $('#heading').text('About 🤔');
+                    $('#passage').text('This is a simple demo application of hash based navigation with Raygun tracking XHRs. Try navigating to another page or triggering some XHR behaviour.');
+                });
+
+                // Default route
+                this.get('/', function() {
+                    this.app.runRoute('get', '#/');
+                });
+
+            });
+
+            $(function() {
+                app.run()
+            });
+        })(jQuery, rgNavigationCallback);
+    </script>
+    <!--  Functionality  -->
+    <script type="text/javascript" charset="UTF-8">
+        async function triggerXhr(endpoint) {
+            try {
+                const response = await fetch(endpoint);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                console.log(data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="bg-white">
+        <div class="relative isolate px-6 pt-14 lg:px-8">
+            <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
+                <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+            </div>
+            <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+                <div class="hidden sm:mb-8 sm:flex sm:justify-center">
+                    <div class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+                        <a href="https://github.com/olwiba" target="_blank">
+                            Made with ❤
+                        </a>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h1 id="heading" class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Welcome home 👋</h1>
+                    <p id="passage" class="mt-6 text-lg leading-8 text-gray-600">Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.</p>
+                    <div class="mt-10">
+                        <h2 class="text-2xl text-gray-900">Navigation</h2>
+                        <div class="mt-2 flex items-center justify-center gap-x-6">
+                            <span class="isolate inline-flex rounded-md shadow-sm">
+                              <a href="#/about" class="relative inline-flex items-center rounded-l-md bg-green-300 px-3.5 py-2.5 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-green-200 focus:z-10">About</a>
+                              <a href="#/" class="relative -ml-px inline-flex items-center bg-cyan-300 px-3.5 py-2.5 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-cyan-200 focus:z-10">Home</a>
+                              <a href="#/settings" class="relative -ml-px inline-flex items-center rounded-r-md bg-violet-300 px-3.5 py-2.5 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-violet-200 focus:z-10">Settings</a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="mt-10">
+                        <h2 class="text-2xl text-gray-900">Trigger XHRs</h2>
+                        <div class="mt-2 flex items-center justify-center gap-x-6">
+                            <span class="isolate inline-flex rounded-md shadow-sm">
+                                <button onclick="triggerXhr('https://collectionapi.metmuseum.org/public/collection/v1/objects?departmentIds=1')" type="button" class="relative inline-flex items-center rounded-l-md bg-green-300 px-3.5 py-2.5 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-green-200 focus:z-10">metmuseum.org</button>
+                                <button onclick="triggerXhr('https://api.thecatapi.com/v1/images/0XYvRd7oD')" type="button" class="relative -ml-px inline-flex items-center bg-cyan-300 px-3.5 py-2.5 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-cyan-200 focus:z-10">thecatapi.com</button>
+                                <button onclick="triggerXhr('https://bible-api.com/john%203:16')" type="button" class="relative -ml-px inline-flex items-center rounded-r-md bg-violet-300 px-3.5 py-2.5 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-violet-200 focus:z-10">bible-api.com</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]" aria-hidden="true">
+                <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

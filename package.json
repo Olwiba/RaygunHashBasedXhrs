@@ -1,0 +1,15 @@
+{
+  "name": "RaygunHashBasedXhrs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./server.js"
+  },
+  "repository": "https://github.com/Olwiba/RaygunHashBasedXhrs.git",
+  "author": "Olwiba <olwiba@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-favicon": "^2.0.4"
+  }
+}
